@@ -1,5 +1,5 @@
 {application, roadrunner_nova, [
-    {description, "Run Nova on Roadrunner."},
+    {description, "Nova adapter for the roadrunner HTTP server."},
     {vsn, semver},
     {registered, []},
     {applications, [
