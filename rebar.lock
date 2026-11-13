@@ -10,7 +10,7 @@
  {<<"ranch">>,{pkg,<<"ranch">>,<<"2.2.0">>},2},
  {<<"roadrunner">>,
   {git,"https://github.com/arizona-framework/roadrunner.git",
-       {ref,"9fb6a393cb56183aad8618168f97b318d3746ac4"}},
+       {ref,"d505874a8d396f74e199d3f9a766871b04265006"}},
   0},
  {<<"thoas">>,{pkg,<<"thoas">>,<<"1.2.1">>},1}]}.
 [
