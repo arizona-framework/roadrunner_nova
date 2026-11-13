@@ -8,21 +8,28 @@ and Nova's listeners run on Roadrunner instead of Cowboy:
 ```erlang
 {nova, [
     {server, roadrunner_nova},
-    {cowboy_configuration, #{port => 8080}}
+    {server_configuration, #{port => 8080}}
 ]}
 ```
 
-The configuration keeps the shape of Nova's `cowboy_configuration` key:
+Nova's `server_configuration` keys work as they do with Cowboy:
 
 - `ip`, `port`, and for TLS `use_ssl => true`, `ssl_port` and
   `ssl_options` (the `ssl` server options)
-- `options`: `compress` (on by default, as with Cowboy) compresses
-  responses with `roadrunner_compress`
-- `roadrunner`: any other `t:roadrunner_listener:opts/0`, such as
-  `max_clients` or `request_timeout`
+- `options`: the server's own options, here Roadrunner's: any
+  `t:roadrunner_listener:opts/0`, such as `max_clients` or
+  `request_timeout`, and `compress` to compress responses with
+  `roadrunner_compress`. As with Cowboy, `options` is
+  `#{compress => true}` when it is not set.
 
-Cowboy-only keys (`stream_handlers`, and the rest of `options`) are
-ignored.
+```erlang
+{server_configuration, #{
+    port => 8080,
+    options => #{compress => true, max_clients => 10_000}
+}}
+```
+
+Cowboy-only keys (`stream_handlers`) are ignored.
 
 Controllers, plugins and WebSocket handlers run unchanged, as long as they
 use `nova_req` rather than `cowboy_req` for anything that touches the
@@ -65,7 +72,7 @@ start_listener(Ref, #{ip := Ip, port := Port} = Configuration, Env) ->
     Options = maps:get(options, Configuration, #{compress => true}),
     State = #{env => Env, compress => maps:get(compress, Options, false) =:= true},
     Opts = maps:merge(
-        maps:get(roadrunner, Configuration, #{}),
+        maps:remove(compress, Options),
         (tls(Configuration))#{
             ip => Ip,
             port => Port,

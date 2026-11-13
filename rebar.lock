@@ -5,7 +5,7 @@
  {<<"jhn_stdlib">>,{pkg,<<"jhn_stdlib">>,<<"5.11.2">>},1},
  {<<"nova">>,
   {git,"https://github.com/williamthome/nova.git",
-       {ref,"e59bf40a38795804ab66caa72ab950e8e7f5ebef"}},
+       {ref,"bbdefc5136cd59e971d813791f420b2f27ca6c6c"}},
   0},
  {<<"ranch">>,{pkg,<<"ranch">>,<<"2.2.0">>},2},
  {<<"roadrunner">>,

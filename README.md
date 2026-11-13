@@ -26,35 +26,37 @@ Add it next to `nova` in your `rebar.config` (latest version on
 ]}.
 ```
 
-Make it Nova's server in your `sys.config`. The rest of the configuration
-keeps the shape of Nova's `cowboy_configuration` key:
+Make it Nova's server in your `sys.config`, next to Nova's usual
+`server_configuration`:
 
 ```erlang
 [{nova, [
     {bootstrap_application, my_app},
     {server, roadrunner_nova},
-    {cowboy_configuration, #{port => 8080}}
+    {server_configuration, #{port => 8080}}
 ]}].
 ```
 
 ## Configuration
 
-`cowboy_configuration` takes the keys you already use with Nova:
+`server_configuration` takes the keys you already use with Nova:
 
 - `ip` and `port`
 - `use_ssl => true` with `ssl_port` and `ssl_options` for TLS
-- `options => #{compress => false}` to turn off response compression,
-  which is on by default as with Cowboy
-
-Add a `roadrunner` key for any other
-[Roadrunner listener option](https://hexdocs.pm/roadrunner/roadrunner_listener.html#t:opts/0):
+- `options`: the server's own options, here any
+  [Roadrunner listener option](https://hexdocs.pm/roadrunner/roadrunner_listener.html#t:opts/0),
+  and `compress` for response compression
 
 ```erlang
-{cowboy_configuration, #{
+{server_configuration, #{
     port => 8080,
-    roadrunner => #{max_clients => 10_000, request_timeout => 30_000}
+    options => #{compress => true, max_clients => 10_000, request_timeout => 30_000}
 }}
 ```
+
+As with Cowboy, `options` is `#{compress => true}` when you don't set it,
+so set `compress => true` in it to keep compression on. Applications that
+still use Nova's earlier `cowboy_configuration` key work as they are.
 
 ## Writing code for any server
 
