@@ -79,9 +79,9 @@ init_per_suite(Config) ->
     ok = application:load(nova),
     ok = application:set_env(nova, bootstrap_application, nova_test_app),
     ok = application:set_env(nova, server, roadrunner_nova),
-    ok = application:set_env(nova, cowboy_configuration, #{
+    ok = application:set_env(nova, server_configuration, #{
         port => Port,
-        roadrunner => #{request_timeout => 1000, max_content_length => 1000000}
+        options => #{compress => true, request_timeout => 1000, max_content_length => 1000000}
     }),
     ok = application:set_env(nova, environment, test),
     ok = application:set_env(nova, plugins, []),
@@ -96,7 +96,9 @@ init_per_suite(Config) ->
 end_per_suite(_Config) ->
     persistent_term:erase(nova_test_app_plugin),
     ok = application:stop(nova_test_app),
-    ok = application:stop(nova).
+    ok = application:stop(nova),
+    %% It wins over the next suite's `cowboy_configuration`.
+    ok = application:unset_env(nova, server_configuration).
 
 routes(File) ->
     Actions = [
